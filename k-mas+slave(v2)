@@ -35,3 +35,11 @@
 
 - name: Disable swap
   command: swapoff -a
+- name: Check kubelet version
+  command: kubelet --version
+
+- name: Check kubeadm version
+  command: kubeadm --version
+
+- name: Check kubectl version
+  command: kubectl --version
