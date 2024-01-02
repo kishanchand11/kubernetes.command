@@ -1,0 +1,37 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    tate: present
+
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - apt-transport-https
+   - ca-certificates
+   - curl
+   - software-properties-common
+
+- name: Add Kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add Kubernetes repository
+   apt_repository:
+     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+     state: present
+
+- name: Install Kubernetes packages
+   apt:
+     name: "{{ item }}"
+     state: present
+   with_items:
+     - kubelet
+     - kubeadm
+     - kubectl
+
+- name: Disable swap
+  command: swapoff -a
