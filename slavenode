@@ -1,0 +1,40 @@
+#playbook for slave node
+
+```yaml
+---
+- name: Update apt package and install required tools
+  apt:
+    update_cache: yes
+    name:
+      - docker.io
+      - apt-transport-https
+      - curl
+  tags:
+    - kubernetes
+
+- name: Add Kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  tags:
+    - kubernetes
+
+- name: Add Kubernetes apt repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+  tags:
+    - kubernetes
+
+- name: Install Kubernetes components
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    update_cache: yes
+  tags:
+    - kubernetes
+```
