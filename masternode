@@ -1,0 +1,78 @@
+# playbook for master node(/tasks/main.yml)
+
+```yaml
+---
+- name: Update apt package and install required tools
+  apt:
+    update_cache: yes
+    name:
+      - docker.io
+      - apt-transport-https
+      - curl
+  tags:
+    - kubernetes
+
+- name: Add Kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  tags:
+    - kubernetes
+
+- name: Add Kubernetes apt repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+  tags:
+    - kubernetes
+
+- name: Install Kubernetes components
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    update_cache: yes
+  tags:
+    - kubernetes
+
+- name: Initialize Kubernetes on master node and ignore preflight errors
+  command: kubeadm init --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=all
+  register: kubeadm_output
+  tags:
+    - kubernetes
+
+- name: Copy admin configuration to user's home directory
+  command: cp /etc/kubernetes/admin.conf {{ ansible_env.HOME }}/admin.conf
+  args:
+    creates: "{{ ansible_env.HOME }}/admin.conf"
+  when: kubeadm_output.changed
+  tags:
+    - kubernetes
+
+- name: Install a pod network for the cluster
+  command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  args:
+    creates: /etc/kubernetes/admin.conf
+  when: kubeadm_output.changed
+  tags:
+    - kubernetes
+
+- name: Get join command for worker nodes
+  command: kubeadm token create --print-join-command
+  register: join_command
+  args:
+    creates: /etc/kubernetes/kubelet.env
+  when: kubeadm_output.changed
+  tags:
+    - kubernetes
+
+- name: Set join command in a file for worker nodes
+  lineinfile:
+    path: /etc/kubernetes/kubelet.env
+    line: "{{ join_command.stdout }}"
+  when: kubeadm_output.changed
+  tags:
+    - kubernetes
