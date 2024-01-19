@@ -9,8 +9,8 @@ Commands to Run on Master & Slave Machine
 
 Install Docker on all Machines 
 
-sudo apt update 
-sudo apt install docker.io -y 
+sudo apt-get update
+sudo apt-get install docker.io -y
 
 Verify Docker is Install in all machine 
 
@@ -26,7 +26,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install -y curl apt-transport-https ca-certificates software-properties-common
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+sudo add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" 
 sudo swapoff -a
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
@@ -45,8 +45,8 @@ which Kubeadm && which Kubectl && which Kubelet
 
 In Master Machine 
 
-sudo su 
-Kubeadm init 
+sudo su
+kubeadm init  (this will generate a token that you need to paste in slaves machine)
 
 In Slave Machines Paste the Token being a root user {means you need to add sudo before pasting token}
 
