@@ -39,6 +39,15 @@ Run the a.sh file in all machine
 
 bash a.sh
 
+###################################################################################################################################################################
+# Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 3590 (apt)... 7s
+# ps aux | grep "process id"
+# sudo kill -9 "processid"
+# sudo rm /var/lib/dpkg/lock
+# sudo rm /var/lib/dpkg/lock-frontend
+###################################################################################################################################################################
+
+
 Verify if Kubeadm , Kubectl , Kubelet installed 
 
 which Kubeadm && which Kubectl && which Kubelet 
