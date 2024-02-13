@@ -87,7 +87,8 @@ https://jhooq.com/kubernetes-error-execution-phase-preflight-preflight/#:~:text=
 --------------------------------------
 error (6443) (solved)
 
-$ sudo systemctl stop kubelet
-$ sudo systemctl start kubelet
-$ strace -eopenat kubectl version
+sudo systemctl stop kubelet
+sudo systemctl start kubelet
+strace -eopenat kubectl version
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
